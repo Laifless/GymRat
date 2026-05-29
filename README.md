@@ -210,4 +210,7 @@ Pull request benvenute! Per cambiamenti importanti apri prima una issue per disc
 
 ## Licenza
 
-MIT — fai quello che vuoi, ma dai credito 🙏
+© 2025 Laifless. Tutti i diritti riservati.
+
+Il codice sorgente, il design e i contenuti di questo progetto sono proprietà esclusiva dell'autore.
+È vietata la copia, la modifica, la distribuzione o l'uso commerciale senza esplicito permesso scritto.
