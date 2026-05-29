@@ -120,7 +120,7 @@ Questo genera automaticamente `lib/firebase_options.dart`.
 
 Su [Firebase Console](https://console.firebase.google.com) → Authentication → Sign-in method:
 - ✅ Google
-- ✅ Apple
+-  Apple (Non ancora testato)
 - ✅ Email/Password
 
 ### 5. Aggiungi le credenziali Android
