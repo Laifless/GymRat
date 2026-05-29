@@ -5,7 +5,9 @@ import '../../core/providers/theme_provider.dart';
 import '../../core/providers/hunter_provider.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_themes.dart';
+import '../auth_provider.dart';
 import '../main_shell.dart';
+import '../login/login.dart';
 
 class BootScreen extends StatefulWidget {
   const BootScreen({super.key});
@@ -24,7 +26,6 @@ class _BootScreenState extends State<BootScreen>
   bool _showEnter = false;
   bool _navigating = false;
 
-  // Sequenze per ogni tema
   static const Map<GymTheme, List<String>> _sequences = {
     GymTheme.rpg: [
       '> initializing hunter system...',
@@ -65,15 +66,13 @@ class _BootScreenState extends State<BootScreen>
     _glow = Tween<double>(begin: 0.4, end: 1.0).animate(
       CurvedAnimation(parent: _glowCtrl, curve: Curves.easeInOut),
     );
-
     WidgetsBinding.instance.addPostFrameCallback((_) => _runSequence());
   }
 
   Future<void> _runSequence() async {
-    final theme = context.read<ThemeProvider>().current;
+    final theme    = context.read<ThemeProvider>().current;
     final sequence = _sequences[theme] ?? _sequences[GymTheme.rpg]!;
 
-    // Aspetta che HunterProvider carichi
     await Future.delayed(const Duration(milliseconds: 300));
 
     for (final line in sequence) {
@@ -94,14 +93,16 @@ class _BootScreenState extends State<BootScreen>
   void _enter() {
     if (_navigating || !_showEnter) return;
     _navigating = true;
+
+    final auth = context.read<AuthProvider>();
+
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
-        pageBuilder: (_, __, ___) => const MainShell(),
+        pageBuilder: (_, __, ___) =>
+            auth.isAuth ? const MainShell() : const LoginScreen(),
         transitionDuration: const Duration(milliseconds: 600),
-        transitionsBuilder: (_, anim, __, child) => FadeTransition(
-          opacity: anim,
-          child: child,
-        ),
+        transitionsBuilder: (_, anim, __, child) =>
+            FadeTransition(opacity: anim, child: child),
       ),
     );
   }
@@ -115,20 +116,15 @@ class _BootScreenState extends State<BootScreen>
   @override
   Widget build(BuildContext context) {
     final themeProvider = context.watch<ThemeProvider>();
-    final colors = themeProvider.colors;
-    final isLight = themeProvider.current == GymTheme.minimal;
+    final colors     = themeProvider.colors;
     final isMedieval = themeProvider.current == GymTheme.medieval;
 
     final fontStyle = isMedieval
         ? GoogleFonts.cinzel(
-            fontSize: 11,
-            color: colors.textSecondary,
-            letterSpacing: 1,
+            fontSize: 11, color: colors.textSecondary, letterSpacing: 1,
           )
         : GoogleFonts.sourceCodePro(
-            fontSize: 11,
-            color: colors.textSecondary,
-            letterSpacing: 0.5,
+            fontSize: 11, color: colors.textSecondary, letterSpacing: 0.5,
           );
 
     return GestureDetector(
@@ -141,34 +137,28 @@ class _BootScreenState extends State<BootScreen>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+
                 // ── Linee terminale ──
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: _lines.map((line) {
-                      final isLast = line == _lines.last;
                       final isOnline = line.contains('ONLINE') ||
                           line.contains('READY') ||
                           line.contains('GUERRIERO');
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 8),
-                        child: AnimatedOpacity(
-                          opacity: 1,
-                          duration: const Duration(milliseconds: 300),
-                          child: Text(
-                            line,
-                            style: fontStyle.copyWith(
-                              color: isOnline
-                                  ? colors.accent
-                                  : isLast
-                                      ? colors.textPrimary
-                                      : colors.textSecondary,
-                              fontWeight: isOnline
-                                  ? FontWeight.w600
-                                  : FontWeight.normal,
-                              fontSize: isOnline ? 13 : 11,
-                            ),
+                        child: Text(
+                          line,
+                          style: fontStyle.copyWith(
+                            color: isOnline
+                                ? colors.accent
+                                : colors.textSecondary,
+                            fontWeight: isOnline
+                                ? FontWeight.w600
+                                : FontWeight.normal,
+                            fontSize: isOnline ? 13 : 11,
                           ),
                         ),
                       );
@@ -178,7 +168,7 @@ class _BootScreenState extends State<BootScreen>
 
                 const SizedBox(height: 48),
 
-                // ── Titolo app ──
+                // ── Titolo ──
                 AnimatedOpacity(
                   opacity: _showTitle ? 1.0 : 0.0,
                   duration: const Duration(milliseconds: 600),
@@ -193,33 +183,25 @@ class _BootScreenState extends State<BootScreen>
                           'THE',
                           style: isMedieval
                               ? GoogleFonts.cinzel(
-                                  fontSize: 14,
-                                  color: colors.textSecondary,
-                                  letterSpacing: 6,
-                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14, color: colors.textSecondary,
+                                  letterSpacing: 6, fontWeight: FontWeight.w400,
                                 )
                               : GoogleFonts.rajdhani(
-                                  fontSize: 14,
-                                  color: colors.textSecondary,
-                                  letterSpacing: 6,
-                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14, color: colors.textSecondary,
+                                  letterSpacing: 6, fontWeight: FontWeight.w400,
                                 ),
                         ),
                         Text(
                           'BIG GYM',
                           style: isMedieval
                               ? GoogleFonts.cinzel(
-                                  fontSize: 52,
-                                  color: colors.accent,
-                                  letterSpacing: 2,
-                                  fontWeight: FontWeight.w700,
+                                  fontSize: 52, color: colors.accent,
+                                  letterSpacing: 2, fontWeight: FontWeight.w700,
                                   height: 1,
                                 )
                               : GoogleFonts.rajdhani(
-                                  fontSize: 58,
-                                  color: colors.accent,
-                                  letterSpacing: 4,
-                                  fontWeight: FontWeight.w700,
+                                  fontSize: 58, color: colors.accent,
+                                  letterSpacing: 4, fontWeight: FontWeight.w700,
                                   height: 1,
                                 ),
                         ),
@@ -248,6 +230,7 @@ class _BootScreenState extends State<BootScreen>
                     ),
                   ),
                 ),
+
               ],
             ),
           ),

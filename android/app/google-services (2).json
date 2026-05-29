@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "675961039544",
+    "project_id": "the-big-gym-218ee",
+    "storage_bucket": "the-big-gym-218ee.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:675961039544:android:9f50ee8cdb9921b528224d",
+        "android_client_info": {
+          "package_name": "com.example.gym_rat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEDUN_UNea_JWzzH2rBREdRDcjp_W-OZk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
