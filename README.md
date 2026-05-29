@@ -4,7 +4,7 @@
 
 ## Eng translation 
 
-for the italian one [click here](## Ita translation)
+for the italian one [click here](##Ita-translation)
 
 > Track your training. Level up. Become a legend.
 
